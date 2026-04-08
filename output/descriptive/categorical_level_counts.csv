@@ -1,0 +1,152 @@
+"column","level","count","percent","included_in_chart"
+"category","Finance & Investments",372,14.0909090909091,TRUE
+"category","Manufacturing",324,12.2727272727273,TRUE
+"category","Technology",314,11.8939393939394,TRUE
+"category","Fashion & Retail",266,10.0757575757576,TRUE
+"category","Food & Beverage",212,8.03030303030303,TRUE
+"category","Healthcare",201,7.61363636363636,TRUE
+"category","Real Estate",193,7.31060606060606,TRUE
+"category","Diversified",187,7.08333333333333,TRUE
+"category","Energy",100,3.78787878787879,TRUE
+"category","Media & Entertainment",91,3.4469696969697,TRUE
+"category","Metals & Mining",74,2.8030303030303,TRUE
+"category","Automotive",73,2.76515151515152,TRUE
+"category","Service",53,2.00757575757576,TRUE
+"category","Construction & Engineering",45,1.70454545454545,TRUE
+"category","Logistics",40,1.51515151515152,TRUE
+"category","Sports",39,1.47727272727273,TRUE
+"category","Telecom",31,1.17424242424242,TRUE
+"category","Gambling & Casinos",25,0.946969696969697,TRUE
+"personName","Li Li",2,0.0757575757575758,TRUE
+"personName","Wang Yanqing & family",2,0.0757575757575758,TRUE
+"personName","A. Jayson Adair",1,0.0378787878787879,TRUE
+"personName","Abdulla Al Futtaim & family",1,0.0378787878787879,TRUE
+"personName","Abdulla bin Ahmad Al Ghurair & family",1,0.0378787878787879,TRUE
+"personName","Abdulsamad Rabiu",1,0.0378787878787879,TRUE
+"personName","Abhay Firodia",1,0.0378787878787879,TRUE
+"personName","Abhay Soi",1,0.0378787878787879,TRUE
+"personName","Abigail Bennett",1,0.0378787878787879,TRUE
+"personName","Abigail Johnson",1,0.0378787878787879,TRUE
+"country","United States",754,28.977709454266,TRUE
+"country","China",523,20.0999231360492,TRUE
+"country","India",157,6.03382013835511,TRUE
+"country","Germany",102,3.92006149116065,TRUE
+"country","United Kingdom",82,3.15142198308993,TRUE
+"country","Russia",79,3.03612605687932,TRUE
+"country","Switzerland",78,2.99769408147579,TRUE
+"country","Hong Kong",68,2.61337432744043,TRUE
+"country","Italy",55,2.11375864719447,TRUE
+"country","Singapore",46,1.76787086856264,TRUE
+"city","New York",99,3.85514018691589,TRUE
+"city","Beijing",68,2.64797507788162,TRUE
+"city","Hong Kong",68,2.64797507788162,TRUE
+"city","Shanghai",64,2.49221183800623,TRUE
+"city","London",61,2.37538940809969,TRUE
+"city","Moscow",60,2.33644859813084,TRUE
+"city","Mumbai",56,2.18068535825545,TRUE
+"city","Shenzhen",54,2.10280373831776,TRUE
+"city","Singapore",45,1.75233644859813,TRUE
+"city","Delhi",37,1.44080996884735,TRUE
+"source","Real estate",151,5.71969696969697,TRUE
+"source","Investments",92,3.48484848484848,TRUE
+"source","Diversified",91,3.4469696969697,TRUE
+"source","Pharmaceuticals",85,3.21969696969697,TRUE
+"source","Software",63,2.38636363636364,TRUE
+"source","Hedge funds",41,1.5530303030303,TRUE
+"source","Private equity",40,1.51515151515152,TRUE
+"source","Chemicals",39,1.47727272727273,TRUE
+"source","Retail",38,1.43939393939394,TRUE
+"source","Manufacturing",35,1.32575757575758,TRUE
+"industries","Finance & Investments",372,14.0909090909091,TRUE
+"industries","Manufacturing",324,12.2727272727273,TRUE
+"industries","Technology",314,11.8939393939394,TRUE
+"industries","Fashion & Retail",266,10.0757575757576,TRUE
+"industries","Food & Beverage",212,8.03030303030303,TRUE
+"industries","Healthcare",201,7.61363636363636,TRUE
+"industries","Real Estate",193,7.31060606060606,TRUE
+"industries","Diversified",187,7.08333333333333,TRUE
+"industries","Energy",100,3.78787878787879,TRUE
+"industries","Media & Entertainment",91,3.4469696969697,TRUE
+"industries","Metals & Mining",74,2.8030303030303,TRUE
+"industries","Automotive",73,2.76515151515152,TRUE
+"industries","Service",53,2.00757575757576,TRUE
+"industries","Construction & Engineering",45,1.70454545454545,TRUE
+"industries","Logistics",40,1.51515151515152,TRUE
+"industries","Sports",39,1.47727272727273,TRUE
+"industries","Telecom",31,1.17424242424242,TRUE
+"industries","Gambling & Casinos",25,0.946969696969697,TRUE
+"countryOfCitizenship","United States",735,27.8409090909091,TRUE
+"countryOfCitizenship","China",491,18.5984848484848,TRUE
+"countryOfCitizenship","India",169,6.40151515151515,TRUE
+"countryOfCitizenship","Germany",126,4.77272727272727,TRUE
+"countryOfCitizenship","Russia",104,3.93939393939394,TRUE
+"countryOfCitizenship","Hong Kong",68,2.57575757575758,TRUE
+"countryOfCitizenship","Italy",64,2.42424242424242,TRUE
+"countryOfCitizenship","Canada",63,2.38636363636364,TRUE
+"countryOfCitizenship","Taiwan",52,1.96969696969697,TRUE
+"countryOfCitizenship","United Kingdom",52,1.96969696969697,TRUE
+"organization","Meta Platforms",4,1.23076923076923,TRUE
+"organization","Gap Inc.",3,0.923076923076923,TRUE
+"organization","Airbnb, Inc.",2,0.615384615384615,TRUE
+"organization","Alimentation Couche Tard Inc. Cl A",2,0.615384615384615,TRUE
+"organization","Alphabet",2,0.615384615384615,TRUE
+"organization","Berkshire Hathaway Inc. (Cl A)",2,0.615384615384615,TRUE
+"organization","Bill & Melinda Gates Foundation",2,0.615384615384615,TRUE
+"organization","Broadcom",2,0.615384615384615,TRUE
+"organization","Carlyle Group",2,0.615384615384615,TRUE
+"organization","Datadog",2,0.615384615384615,TRUE
+"selfMade","TRUE",1812,68.6363636363636,TRUE
+"selfMade","FALSE",828,31.3636363636364,TRUE
+"status","D",1223,46.3257575757576,TRUE
+"status","U",855,32.3863636363636,TRUE
+"status","E",268,10.1515151515152,TRUE
+"status","N",150,5.68181818181818,TRUE
+"status","Split Family Fortune",79,2.99242424242424,TRUE
+"status","R",65,2.46212121212121,TRUE
+"gender","M",2303,87.2348484848485,TRUE
+"gender","F",337,12.7651515151515,TRUE
+"lastName","Li",44,1.66666666666667,TRUE
+"lastName","Wang",40,1.51515151515152,TRUE
+"lastName","Chen",35,1.32575757575758,TRUE
+"lastName","Zhang",33,1.25,TRUE
+"lastName","Wu",25,0.946969696969697,TRUE
+"lastName","Xu",19,0.71969696969697,TRUE
+"lastName","Huang",15,0.568181818181818,TRUE
+"lastName","Lee",15,0.568181818181818,TRUE
+"lastName","Lin",15,0.568181818181818,TRUE
+"lastName","Liu",14,0.53030303030303,TRUE
+"firstName","John",40,1.51687523701176,TRUE
+"firstName","David",36,1.36518771331058,TRUE
+"firstName","Michael",28,1.06181266590823,TRUE
+"firstName","Richard",21,0.796359499431172,TRUE
+"firstName","Robert",19,0.720515737580584,TRUE
+"firstName","Thomas",19,0.720515737580584,TRUE
+"firstName","Daniel",16,0.606750094804702,TRUE
+"firstName","James",16,0.606750094804702,TRUE
+"firstName","William",16,0.606750094804702,TRUE
+"firstName","Peter",15,0.568828213879408,TRUE
+"title","Investor",44,12.9793510324484,TRUE
+"title","Founder",34,10.0294985250737,TRUE
+"title","CEO",29,8.55457227138643,TRUE
+"title","Chairman and CEO",28,8.25958702064897,TRUE
+"title","Chairman",25,7.37463126843658,TRUE
+"title","Cofounder",24,7.07964601769912,TRUE
+"title","Founder and CEO",7,2.06489675516224,TRUE
+"title","Founder and Chairman",6,1.76991150442478,TRUE
+"title","Owner",6,1.76991150442478,TRUE
+"title","Director",5,1.47492625368732,TRUE
+"state","California",178,23.6387782204515,TRUE
+"state","New York",128,16.9986719787517,TRUE
+"state","Florida",94,12.4833997343957,TRUE
+"state","Texas",70,9.29614873837981,TRUE
+"state","Illinois",24,3.18725099601594,TRUE
+"state","Massachusetts",21,2.78884462151394,TRUE
+"state","Pennsylvania",19,2.52324037184595,TRUE
+"state","Nevada",18,2.39043824701195,TRUE
+"state","Georgia",17,2.25763612217796,TRUE
+"state","Connecticut",14,1.85922974767596,TRUE
+"residenceStateRegion","West",248,33.1994645247657,TRUE
+"residenceStateRegion","South",241,32.2623828647925,TRUE
+"residenceStateRegion","Northeast",190,25.4350736278447,TRUE
+"residenceStateRegion","Midwest",67,8.96921017402945,TRUE
+"residenceStateRegion","U.S. Territories",1,0.133868808567604,TRUE
