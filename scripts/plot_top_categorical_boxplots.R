@@ -79,6 +79,7 @@ data[[response_col]] <- coerce_numeric_like(data[[response_col]])
 
 data$country_top10 <- group_top_levels(data$country, top_n = 10, include_missing = TRUE)
 data$citizenship_top10 <- group_top_levels(data$countryOfCitizenship, top_n = 10, include_missing = FALSE)
+data$title_top10 <- group_top_levels(data$title, top_n = 10, include_missing = FALSE)
 data$birthYear_quartile <- quartile_band(data$birthYear, "BirthYear")
 data$age_quartile <- quartile_band(data$age, "Age")
 
@@ -86,6 +87,7 @@ plot_specs <- list(
   list(column = "status", title = paste("Boxplot of", response_col, "by status"), file = "status_boxplot.png"),
   list(column = "country_top10", title = paste("Boxplot of", response_col, "by country (Top 10 + Other + Missing)"), file = "country_top10_boxplot.png"),
   list(column = "citizenship_top10", title = paste("Boxplot of", response_col, "by country of citizenship (Top 10 + Other)"), file = "country_of_citizenship_top10_boxplot.png"),
+  list(column = "title_top10", title = paste("Boxplot of", response_col, "by title (Top 10 + Other)"), file = "title_top10_boxplot.png"),
   list(column = "category", title = paste("Boxplot of", response_col, "by category"), file = "category_boxplot.png"),
   list(column = "selfMade", title = paste("Boxplot of", response_col, "by selfMade"), file = "selfMade_boxplot.png"),
   list(column = "birthYear_quartile", title = paste("Boxplot of", response_col, "by birthYear quartile"), file = "birthYear_quartile_boxplot.png"),
