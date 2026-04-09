@@ -16,7 +16,8 @@ coerce_numeric_like <- function(x) {
 }
 
 group_top_levels <- function(x, top_n, include_missing = TRUE) {
-  counts <- sort(table(x), decreasing = TRUE)
+  valid <- !is.na(x) & x != ""
+  counts <- sort(table(x[valid]), decreasing = TRUE)
   top_levels <- names(counts)[seq_len(min(top_n, length(counts)))]
   out <- ifelse(x %in% top_levels, x, "Other")
   if (include_missing) {

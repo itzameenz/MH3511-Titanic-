@@ -1,0 +1,408 @@
+Boxplot Group Mean Tests
+Response variable used across all tests: log_log_net_worth
+Variance decision rule: use Fligner-Killeen; if equal variances hold, use pooled t-test / one-way ANOVA; otherwise use Welch t-test / Welch ANOVA.
+
+================================================================================
+Grouping: status
+Grouping description: Raw status categories
+Related boxplot: output/boxplots/status_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 2640
+Groups used: 6
+
+Group counts:
+D = 1223
+U = 855
+E = 268
+N = 150
+Split Family Fortune = 79
+R = 65
+
+Group means:
+U = 2.103543
+D = 2.062628
+Split Family Fortune = 2.059674
+E = 2.012569
+N = 2.010489
+R = 1.980179
+
+Group variances:
+D = 0.009844
+U = 0.009160
+E = 0.003642
+N = 0.005670
+Split Family Fortune = 0.009451
+R = 0.002540
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 133.1424 , df = 5 , p-value = 5.12317e-27
+Fligner-Killeen test: chi-squared = 108.9579 , df = 5 , p-value = 6.80304e-22
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: No
+
+Chosen mean-comparison test: Welch ANOVA
+Test statistic =109.9564, numerator df = 5.0000, denominator df =336.1564, p-value =1.49022e-68
+Null hypothesis: all group means are equal.
+Decision: reject H0.
+
+================================================================================
+Grouping: country_top10
+Grouping description: Top 10 countries + Other + Missing
+Related boxplot: output/boxplots/country_top10_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 2640
+Groups used: 12
+
+Group counts:
+United States = 754
+Other = 658
+China = 523
+India = 157
+Germany = 102
+United Kingdom = 82
+Russia = 79
+Switzerland = 78
+Hong Kong = 68
+Italy = 55
+Singapore = 46
+Missing = 38
+
+Group means:
+Switzerland = 2.095253
+United States = 2.089183
+Hong Kong = 2.082027
+United Kingdom = 2.074836
+Germany = 2.070880
+Russia = 2.067059
+Other = 2.058239
+India = 2.051621
+Italy = 2.048751
+Singapore = 2.043902
+China = 2.043197
+Missing = 2.022549
+
+Group variances:
+United States = 0.010399
+Other = 0.009399
+China = 0.008323
+India = 0.008512
+Germany = 0.010288
+United Kingdom = 0.010619
+Russia = 0.010963
+Switzerland = 0.009077
+Hong Kong = 0.009016
+Italy = 0.005634
+Singapore = 0.007009
+Missing = 0.005115
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 23.8157 , df = 11 , p-value = 0.0135331
+Fligner-Killeen test: chi-squared = 27.3827 , df = 11 , p-value = 0.00402105
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: No
+
+Chosen mean-comparison test: Welch ANOVA
+Test statistic =9.6622, numerator df = 11.0000, denominator df =360.9380, p-value =2.39442e-15
+Null hypothesis: all group means are equal.
+Decision: reject H0.
+
+================================================================================
+Grouping: citizenship_top10
+Grouping description: Top 10 countries of citizenship + Other
+Related boxplot: output/boxplots/country_of_citizenship_top10_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 2640
+Groups used: 11
+
+Group counts:
+United States = 735
+Other = 716
+China = 491
+India = 169
+Germany = 126
+Russia = 104
+Hong Kong = 68
+Italy = 64
+Canada = 63
+Taiwan = 52
+United Kingdom = 52
+
+Group means:
+Hong Kong = 2.089905
+United States = 2.089592
+Germany = 2.072021
+United Kingdom = 2.070927
+Russia = 2.067120
+Other = 2.061103
+Canada = 2.060416
+Italy = 2.053962
+India = 2.052668
+China = 2.040474
+Taiwan = 2.038480
+
+Group variances:
+United States = 0.010449
+Other = 0.009519
+China = 0.008140
+India = 0.008443
+Germany = 0.010454
+Russia = 0.011496
+Hong Kong = 0.010334
+Italy = 0.006456
+Canada = 0.007599
+Taiwan = 0.005142
+United Kingdom = 0.008232
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 26.5908 , df = 10 , p-value = 0.00302178
+Fligner-Killeen test: chi-squared = 28.4075 , df = 10 , p-value = 0.00155291
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: No
+
+Chosen mean-comparison test: Welch ANOVA
+Test statistic =9.4391, numerator df = 10.0000, denominator df =378.4082, p-value =4.89248e-14
+Null hypothesis: all group means are equal.
+Decision: reject H0.
+
+================================================================================
+Grouping: title_top10
+Grouping description: Top 10 titles + Other
+Related boxplot: output/boxplots/title_top10_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 339
+Groups used: 11
+
+Group counts:
+Other = 131
+Investor = 44
+Founder = 34
+CEO = 29
+Chairman and CEO = 28
+Chairman = 25
+Cofounder = 24
+Founder and CEO = 7
+Founder and Chairman = 6
+Owner = 6
+Director = 5
+
+Group means:
+Chairman and CEO = 2.190308
+Founder and Chairman = 2.166846
+Owner = 2.160345
+Chairman = 2.148757
+Founder and CEO = 2.144398
+CEO = 2.130608
+Other = 2.117114
+Founder = 2.116990
+Cofounder = 2.096753
+Investor = 2.095607
+Director = 2.054168
+
+Group variances:
+Other = 0.016220
+Investor = 0.006371
+Founder = 0.013803
+CEO = 0.023854
+Chairman and CEO = 0.020361
+Chairman = 0.011622
+Cofounder = 0.010439
+Founder and CEO = 0.004031
+Founder and Chairman = 0.018493
+Owner = 0.021274
+Director = 0.037625
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 25.0477 , df = 10 , p-value = 0.00525583
+Fligner-Killeen test: chi-squared = 15.8939 , df = 10 , p-value = 0.102709
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: Yes
+
+Chosen mean-comparison test: One-way ANOVA
+Test statistic =1.6377, numerator df = 10.0000, denominator df =328.0000, p-value =0.09473
+Null hypothesis: all group means are equal.
+Decision: fail to reject H0.
+
+================================================================================
+Grouping: category
+Grouping description: Raw category field
+Related boxplot: output/boxplots/category_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 2640
+Groups used: 18
+
+Group counts:
+Finance & Investments = 372
+Manufacturing = 324
+Technology = 314
+Fashion & Retail = 266
+Food & Beverage = 212
+Healthcare = 201
+Real Estate = 193
+Diversified = 187
+Energy = 100
+Media & Entertainment = 91
+Metals & Mining = 74
+Automotive = 73
+Service = 53
+Construction & Engineering = 45
+Logistics = 40
+Sports = 39
+Telecom = 31
+Gambling & Casinos = 25
+
+Group means:
+Metals & Mining = 2.093197
+Logistics = 2.089412
+Fashion & Retail = 2.079849
+Automotive = 2.078442
+Energy = 2.077853
+Gambling & Casinos = 2.075598
+Telecom = 2.075347
+Finance & Investments = 2.071943
+Technology = 2.071319
+Food & Beverage = 2.070162
+Diversified = 2.066266
+Media & Entertainment = 2.061777
+Sports = 2.059605
+Real Estate = 2.058759
+Service = 2.054210
+Healthcare = 2.046986
+Manufacturing = 2.044242
+Construction & Engineering = 2.037322
+
+Group variances:
+Finance & Investments = 0.008865
+Manufacturing = 0.007433
+Technology = 0.011926
+Fashion & Retail = 0.011943
+Food & Beverage = 0.009535
+Healthcare = 0.007578
+Real Estate = 0.006857
+Diversified = 0.009583
+Energy = 0.010409
+Media & Entertainment = 0.009161
+Metals & Mining = 0.013040
+Automotive = 0.013319
+Service = 0.007338
+Construction & Engineering = 0.004981
+Logistics = 0.013110
+Sports = 0.007732
+Telecom = 0.012631
+Gambling & Casinos = 0.011038
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 62.5771 , df = 17 , p-value = 3.92265e-07
+Fligner-Killeen test: chi-squared = 32.7990 , df = 17 , p-value = 0.0119511
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: No
+
+Chosen mean-comparison test: Welch ANOVA
+Test statistic =3.0769, numerator df = 17.0000, denominator df =453.4597, p-value =3.77598e-05
+Null hypothesis: all group means are equal.
+Decision: reject H0.
+
+================================================================================
+Grouping: selfMade
+Grouping description: Binary selfMade field
+Related boxplot: output/boxplots/selfMade_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 2640
+Groups used: 2
+
+Group counts:
+TRUE = 1812
+FALSE = 828
+
+Group means:
+FALSE = 2.074049
+TRUE = 2.061909
+
+Group variances:
+TRUE = 0.009542
+FALSE = 0.009833
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 0.2572 , df = 1 , p-value = 0.612032
+Fligner-Killeen test: chi-squared = 0.4663 , df = 1 , p-value = 0.494675
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: Yes
+
+Chosen mean-comparison test: Student two-sample t-test
+Test statistic =2.9487, denominator df =2638.0000, p-value =0.00321918
+Null hypothesis: the two group means are equal.
+Decision: reject H0.
+
+================================================================================
+Grouping: birthYear_quartile
+Grouping description: Birth year split into quartiles
+Related boxplot: output/boxplots/birthYear_quartile_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 2564
+Groups used: 4
+
+Group counts:
+BirthYear_Q1 = 690
+BirthYear_Q3 = 630
+BirthYear_Q4 = 628
+BirthYear_Q2 = 616
+
+Group means:
+BirthYear_Q1 = 2.084244
+BirthYear_Q2 = 2.072032
+BirthYear_Q3 = 2.060678
+BirthYear_Q4 = 2.049596
+
+Group variances:
+BirthYear_Q1 = 0.010608
+BirthYear_Q3 = 0.008587
+BirthYear_Q4 = 0.009108
+BirthYear_Q2 = 0.009918
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 8.4921 , df = 3 , p-value = 0.036865
+Fligner-Killeen test: chi-squared = 6.8033 , df = 3 , p-value = 0.0784376
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: Yes
+
+Chosen mean-comparison test: One-way ANOVA
+Test statistic =15.1797, numerator df = 3.0000, denominator df =2560.0000, p-value =8.6085e-10
+Null hypothesis: all group means are equal.
+Decision: reject H0.
+
+================================================================================
+Grouping: age_quartile
+Grouping description: Age split into quartiles
+Related boxplot: output/boxplots/age_quartile_boxplot.png
+Response variable: log_log_net_worth
+Rows used: 2575
+Groups used: 4
+
+Group counts:
+Age_Q1 = 675
+Age_Q3 = 660
+Age_Q2 = 641
+Age_Q4 = 599
+
+Group means:
+Age_Q4 = 2.085135
+Age_Q3 = 2.071199
+Age_Q2 = 2.062463
+Age_Q1 = 2.050642
+
+Group variances:
+Age_Q1 = 0.008943
+Age_Q3 = 0.009563
+Age_Q2 = 0.009126
+Age_Q4 = 0.010785
+
+Equality-of-variance checks:
+Bartlett test: K-squared = 6.6649 , df = 3 , p-value = 0.0833796
+Fligner-Killeen test: chi-squared = 7.2470 , df = 3 , p-value = 0.0644279
+Primary variance test used for decision: Fligner-Killeen test
+Equal variances assumed: Yes
+
+Chosen mean-comparison test: One-way ANOVA
+Test statistic =14.0080, numerator df = 3.0000, denominator df =2571.0000, p-value =4.66299e-09
+Null hypothesis: all group means are equal.
+Decision: reject H0.
+
