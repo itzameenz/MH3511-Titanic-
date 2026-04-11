@@ -15,8 +15,12 @@ if (!file.exists(raw_path)) {
 }
 
 coerce_numeric_like <- function(x) {
-  if (is.logical(x)) return(as.integer(x))
-  if (is.numeric(x) || is.integer(x)) return(as.numeric(x))
+  if (is.logical(x)) {
+    return(as.integer(x))
+  }
+  if (is.numeric(x) || is.integer(x)) {
+    return(as.numeric(x))
+  }
   y <- gsub("[$, ]", "", x)
   y[y == ""] <- NA
   suppressWarnings(as.numeric(y))
@@ -24,9 +28,13 @@ coerce_numeric_like <- function(x) {
 
 skewness_value <- function(x) {
   x <- x[is.finite(x)]
-  if (length(x) < 3) return(NA_real_)
+  if (length(x) < 3) {
+    return(NA_real_)
+  }
   sigma <- stats::sd(x)
-  if (!is.finite(sigma) || sigma == 0) return(NA_real_)
+  if (!is.finite(sigma) || sigma == 0) {
+    return(NA_real_)
+  }
   mu <- mean(x)
   mean(((x - mu) / sigma)^3)
 }
@@ -39,7 +47,9 @@ log_transform <- function(x) {
 
 exp_transform <- function(x) {
   rng <- range(x, na.rm = TRUE)
-  if (!all(is.finite(rng)) || diff(rng) == 0) return(rep(NA_real_, length(x)))
+  if (!all(is.finite(rng)) || diff(rng) == 0) {
+    return(rep(NA_real_, length(x)))
+  }
   scaled <- (x - rng[1]) / diff(rng)
   exp(scaled)
 }
@@ -61,7 +71,9 @@ best_secondary_right_skew_transform <- function(x) {
 
 save_histogram <- function(x, column_name, out_dir) {
   x <- x[is.finite(x)]
-  if (length(x) < 2) return(invisible(NULL))
+  if (length(x) < 2) {
+    return(invisible(NULL))
+  }
   safe_name <- gsub("[^A-Za-z0-9_]+", "_", column_name)
   out_path <- file.path(out_dir, paste0(safe_name, ".png"))
   grDevices::png(out_path, width = 900, height = 600)
@@ -201,22 +213,22 @@ if ("log_net_worth" %in% names(clean_data)) {
 }
 
 correlation_cols <- unique(c(analysis_numeric_cols, transformed_cols))
-correlation_cols <- setdiff(correlation_cols, "net_worth")
+correlation_cols <- setdiff(correlation_cols, "log_net_worth")
 
 correlation_summary <- data.frame(
   column = correlation_cols,
-  correlation_to_net_worth = vapply(
+  correlation_to_log_net_worth = vapply(
     correlation_cols,
     function(col_name) {
       x <- coerce_numeric_like(clean_data[[col_name]])
-      stats::cor(x, clean_data$net_worth, use = "pairwise.complete.obs")
+      stats::cor(x, clean_data$log_net_worth, use = "pairwise.complete.obs")
     },
     numeric(1)
   ),
   stringsAsFactors = FALSE
 )
 
-correlation_summary$abs_correlation <- abs(correlation_summary$correlation_to_net_worth)
+correlation_summary$abs_correlation <- abs(correlation_summary$correlation_to_log_net_worth)
 correlation_summary <- correlation_summary[order(-correlation_summary$abs_correlation), ]
 row.names(correlation_summary) <- NULL
 
