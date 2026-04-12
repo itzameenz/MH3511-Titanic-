@@ -1,376 +1,198 @@
+library(ggplot2)
+library(dplyr)
+
 data_path <- file.path("data", "processed", "billionaires_analysis_ready.csv")
-out_dir <- file.path("output", "descriptive")
-hist_dir <- file.path(out_dir, "histograms")
-box_dir <- file.path(out_dir, "boxplots")
-bar_dir <- file.path(out_dir, "barplots")
+data <- read.csv(data_path, stringsAsFactors = FALSE)
 
-manifest_path <- file.path(out_dir, "column_manifest.csv")
-numeric_summary_path <- file.path(out_dir, "numeric_summary.csv")
-categorical_counts_path <- file.path(out_dir, "categorical_level_counts.csv")
-date_summary_path <- file.path(out_dir, "date_summary.csv")
-run_summary_path <- file.path(out_dir, "descriptive_run_summary.txt")
+out_num <- file.path("output", "descriptive", "numeric")
+out_cat <- file.path("output", "descriptive", "categorical")
+dir.create(out_num, recursive = TRUE, showWarnings = FALSE)
+dir.create(out_cat, recursive = TRUE, showWarnings = FALSE)
 
-dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
-dir.create(hist_dir, recursive = TRUE, showWarnings = FALSE)
-dir.create(box_dir, recursive = TRUE, showWarnings = FALSE)
-dir.create(bar_dir, recursive = TRUE, showWarnings = FALSE)
+theme_set(theme_minimal(base_size = 13))
 
-if (!file.exists(data_path)) {
-  stop("Missing processed dataset at: ", data_path, call. = FALSE)
+# ── Helpers ────────────────────────────────────────────────────────────────────
+
+save_plot <- function(p, filename, dir, w = 8, h = 5) {
+  ggsave(file.path(dir, filename), plot = p, width = w, height = h, dpi = 150)
 }
 
-coerce_numeric_like <- function(x) {
-  if (is.logical(x)) return(as.integer(x))
-  if (is.numeric(x) || is.integer(x)) return(as.numeric(x))
-  y <- gsub("[$, ]", "", x)
-  y[y == ""] <- NA
-  suppressWarnings(as.numeric(y))
-}
-
-parse_date_like <- function(x) {
-  if (inherits(x, "Date")) return(as.POSIXct(x))
-  formats <- c("%m/%d/%Y %H:%M", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%m/%d/%Y")
-  for (fmt in formats) {
-    parsed <- as.POSIXct(x, format = fmt, tz = "UTC")
-    if (sum(!is.na(parsed)) > 0) {
-      return(parsed)
-    }
-  }
-  rep(as.POSIXct(NA), length(x))
-}
-
-skewness_value <- function(x) {
+hist_plot <- function(col, xlabel, title) {
+  x <- data[[col]]
   x <- x[is.finite(x)]
-  if (length(x) < 3) return(NA_real_)
-  sigma <- stats::sd(x)
-  if (!is.finite(sigma) || sigma == 0) return(NA_real_)
-  mu <- mean(x)
-  mean(((x - mu) / sigma)^3)
+  df <- data.frame(x = x)
+  ggplot(df, aes(x = x)) +
+    geom_histogram(fill = "#5B8FF9", colour = "white", bins = 40) +
+    labs(title = title, x = xlabel, y = "Count")
 }
 
-safe_name <- function(x) {
-  gsub("[^A-Za-z0-9_]+", "_", x)
-}
-
-non_missing_mask <- function(x) {
-  if (is.character(x)) {
-    !is.na(x) & x != ""
-  } else {
-    !is.na(x)
-  }
-}
-
-numeric_summary_row <- function(column, x) {
-  ok <- is.finite(x)
-  x <- x[ok]
-  if (!length(x)) {
-    return(
-      data.frame(
-        column = column,
-        n = 0L,
-        missing = NA_integer_,
-        mean = NA_real_,
-        median = NA_real_,
-        sd = NA_real_,
-        min = NA_real_,
-        q1 = NA_real_,
-        q3 = NA_real_,
-        max = NA_real_,
-        iqr = NA_real_,
-        skewness = NA_real_,
-        stringsAsFactors = FALSE
-      )
-    )
-  }
-
-  qs <- stats::quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = FALSE)
-  data.frame(
-    column = column,
-    n = length(x),
-    missing = NA_integer_,
-    mean = mean(x),
-    median = qs[2],
-    sd = stats::sd(x),
-    min = min(x),
-    q1 = qs[1],
-    q3 = qs[3],
-    max = max(x),
-    iqr = stats::IQR(x),
-    skewness = skewness_value(x),
-    stringsAsFactors = FALSE
-  )
-}
-
-save_histogram <- function(x, column_name) {
+box_plot <- function(col, ylabel, title, filename, dir) {
+  x <- as.numeric(data[[col]])
   x <- x[is.finite(x)]
-  if (length(x) < 2) return(NA_character_)
-  out_path <- file.path(hist_dir, paste0(safe_name(column_name), "_hist.png"))
-  grDevices::png(out_path, width = 1100, height = 700, res = 130)
-  graphics::hist(
-    x,
-    breaks = "FD",
-    col = "#6BAED6",
-    border = "white",
-    main = paste("Histogram of", column_name),
-    xlab = column_name
-  )
-  graphics::grid(nx = NA, ny = NULL, col = "#E0E0E0", lty = "dotted")
-  grDevices::dev.off()
-  out_path
+  png(file.path(dir, filename), width = 600, height = 600)
+  boxplot(x, main = title, ylab = ylabel)
+  dev.off()
 }
 
-save_boxplot <- function(x, column_name) {
-  x <- x[is.finite(x)]
-  if (!length(x)) return(NA_character_)
-  out_path <- file.path(box_dir, paste0(safe_name(column_name), "_boxplot.png"))
-  grDevices::png(out_path, width = 900, height = 700, res = 130)
-  graphics::boxplot(
-    x,
-    horizontal = TRUE,
-    col = "#9ECAE1",
-    border = "#2171B5",
-    main = paste("Boxplot of", column_name),
-    xlab = column_name
-  )
-  graphics::grid(nx = NA, ny = NULL, col = "#E0E0E0", lty = "dotted")
-  grDevices::dev.off()
-  out_path
+bar_plot <- function(col, top_n = 15, title, xlabel = col) {
+  x <- data[[col]]
+  x[is.na(x) | x == ""] <- NA
+  df <- data.frame(x = x) %>%
+    filter(!is.na(x)) %>%
+    count(x, sort = TRUE) %>%
+    slice_head(n = top_n) %>%
+    mutate(x = reorder(x, n))
+  ggplot(df, aes(x = n, y = x)) +
+    geom_col(fill = "#5B8FF9") +
+    labs(title = title, x = "Count", y = xlabel)
 }
 
-save_barplot <- function(counts, column_name, suffix) {
-  if (!length(counts)) return(NA_character_)
-  counts <- sort(counts, decreasing = TRUE)
-  out_path <- file.path(bar_dir, paste0(safe_name(column_name), "_", suffix, ".png"))
-  height_px <- max(900, 120 + 40 * length(counts))
-  grDevices::png(out_path, width = 1200, height = height_px, res = 130)
-  graphics::par(mar = c(5, max(10, 0.18 * max(nchar(names(counts)))), 4, 2) + 0.1)
-  graphics::barplot(
-    rev(as.numeric(counts)),
-    names.arg = rev(names(counts)),
-    horiz = TRUE,
-    las = 1,
-    col = "#74C476",
-    border = "#238B45",
-    main = paste("Bar Chart of", column_name, "(", suffix, ")", sep = ""),
-    xlab = "Count",
-    cex.names = 0.8
-  )
-  graphics::grid(nx = NULL, ny = NA, col = "#E0E0E0", lty = "dotted")
-  grDevices::dev.off()
-  out_path
+raw_vs_transformed <- function(raw_col, trans_col, raw_label, trans_label, title) {
+  df_raw <- data.frame(value = data[[raw_col]][is.finite(data[[raw_col]])], type = raw_label)
+  df_trans <- data.frame(value = data[[trans_col]][is.finite(data[[trans_col]])], type = trans_label)
+  df <- bind_rows(df_raw, df_trans)
+  ggplot(df, aes(x = value)) +
+    geom_histogram(fill = "#5B8FF9", colour = "white", bins = 40) +
+    facet_wrap(~type, scales = "free") +
+    labs(title = title, x = "Value", y = "Count")
 }
 
-save_date_plot <- function(x, column_name) {
-  parsed <- parse_date_like(x)
-  ok <- !is.na(parsed)
-  parsed <- parsed[ok]
-  if (!length(parsed)) return(NA_character_)
+# ── Numeric columns ─────────────────────────────────────────────────────────
 
-  years <- format(parsed, "%Y")
-  counts <- sort(table(years), decreasing = TRUE)
+# log_net_worth
+save_plot(hist_plot("log_net_worth", "Log Net Worth", "Distribution of Log Net Worth"),
+          "log_net_worth_hist.png", out_num)
+box_plot("log_net_worth", "Log Net Worth", "Log Net Worth Boxplot",
+         "log_net_worth_box.png", out_num)
 
-  if (length(counts) <= 20L) {
-    return(save_barplot(counts, column_name, "date_counts"))
-  }
+# age
+save_plot(hist_plot("age", "Age", "Distribution of Age"),
+          "age_hist.png", out_num)
+box_plot("age", "Age", "Age Distribution",
+         "age_box.png", out_num)
 
-  out_path <- file.path(bar_dir, paste0(safe_name(column_name), "_year_hist.png"))
-  year_num <- as.numeric(years)
-  grDevices::png(out_path, width = 1100, height = 700, res = 130)
-  graphics::hist(
-    year_num,
-    breaks = "FD",
-    col = "#FDBE85",
-    border = "white",
-    main = paste("Year Distribution of", column_name),
-    xlab = "Year"
-  )
-  graphics::grid(nx = NA, ny = NULL, col = "#E0E0E0", lty = "dotted")
-  grDevices::dev.off()
-  out_path
-}
+# CPI
+save_plot(raw_vs_transformed("cpi_country", "log_cpi_country",
+          "CPI (Raw)", "CPI (Log)", "CPI: Raw vs Log Transform"),
+          "cpi_raw_vs_log.png", out_num, w = 10, h = 5)
 
-detect_family <- function(column_name, x) {
-  if (is.logical(x)) return("categorical")
-  if (is.numeric(x) || is.integer(x)) return("numeric")
+# CPI change
+save_plot(raw_vs_transformed("cpi_change_country", "log_cpi_change_country",
+          "CPI Change (Raw)", "CPI Change (Log)", "CPI Change: Raw vs Log Transform"),
+          "cpi_change_raw_vs_log.png", out_num, w = 10, h = 5)
 
-  mask <- non_missing_mask(x)
-  non_missing <- x[mask]
-  if (!length(non_missing)) return("empty")
+# GDP
+save_plot(hist_plot("gdp_country_numeric", "GDP (USD)", "Distribution of Country GDP"),
+          "gdp_hist.png", out_num)
+box_plot("gdp_country_numeric", "GDP (USD)", "Country GDP Boxplot",
+         "gdp_box.png", out_num)
 
-  parsed_dates <- parse_date_like(non_missing)
-  date_ratio <- mean(!is.na(parsed_dates))
-  if (date_ratio >= 0.8) return("date")
+# Tertiary education
+save_plot(hist_plot("gross_tertiary_education_enrollment",
+          "Gross Tertiary Enrollment (%)", "Tertiary Education Enrollment"),
+          "tertiary_edu_hist.png", out_num)
 
-  numeric_like <- coerce_numeric_like(non_missing)
-  numeric_ratio <- mean(!is.na(numeric_like))
-  if (numeric_ratio >= 0.8) return("numeric_like_text")
+# Primary education
+save_plot(raw_vs_transformed("gross_primary_education_enrollment_country",
+          "log_gross_primary_education_enrollment_country",
+          "Primary Edu (Raw)", "Primary Edu (Log)",
+          "Primary Education Enrollment: Raw vs Log"),
+          "primary_edu_raw_vs_log.png", out_num, w = 10, h = 5)
 
-  unique_n <- length(unique(non_missing))
-  if (unique_n <= 20) return("categorical")
-  "high_cardinality_categorical"
-}
+# Life expectancy
+save_plot(raw_vs_transformed("life_expectancy_country", "exp_life_expectancy_country",
+          "Life Expectancy (Raw)", "Life Expectancy (Exp)",
+          "Life Expectancy: Raw vs Exp Transform"),
+          "life_expectancy_raw_vs_exp.png", out_num, w = 10, h = 5)
 
-data <- utils::read.csv(data_path, stringsAsFactors = FALSE)
+# Tax revenue
+save_plot(hist_plot("tax_revenue_country_country", "Tax Revenue (% of GDP)",
+          "Distribution of Tax Revenue"),
+          "tax_revenue_hist.png", out_num)
+box_plot("tax_revenue_country_country", "Tax Revenue (% of GDP)", "Tax Revenue Boxplot",
+         "tax_revenue_box.png", out_num)
 
-manifest <- data.frame(
-  column = character(),
-  original_class = character(),
-  analysis_family = character(),
-  non_missing = integer(),
-  missing = integer(),
-  unique_values = integer(),
-  chart_1_type = character(),
-  chart_1_file = character(),
-  chart_2_type = character(),
-  chart_2_file = character(),
-  stringsAsFactors = FALSE
-)
+# Total tax rate
+save_plot(hist_plot("total_tax_rate_country", "Total Tax Rate (%)",
+          "Distribution of Total Tax Rate"),
+          "total_tax_rate_hist.png", out_num)
+box_plot("total_tax_rate_country", "Total Tax Rate (%)", "Total Tax Rate Boxplot",
+         "total_tax_rate_box.png", out_num)
 
-numeric_summary <- data.frame(
-  column = character(),
-  n = integer(),
-  missing = integer(),
-  mean = numeric(),
-  median = numeric(),
-  sd = numeric(),
-  min = numeric(),
-  q1 = numeric(),
-  q3 = numeric(),
-  max = numeric(),
-  iqr = numeric(),
-  skewness = numeric(),
-  stringsAsFactors = FALSE
-)
+# Population
+save_plot(hist_plot("population_country", "Population",
+          "Distribution of Country Population"),
+          "population_hist.png", out_num)
+box_plot("population_country", "Population", "Country Population Boxplot",
+         "population_box.png", out_num)
 
-categorical_counts <- data.frame(
-  column = character(),
-  level = character(),
-  count = integer(),
-  percent = numeric(),
-  included_in_chart = logical(),
-  stringsAsFactors = FALSE
-)
+# ── Categorical columns ──────────────────────────────────────────────────────
 
-date_summary <- data.frame(
-  column = character(),
-  n = integer(),
-  missing = integer(),
-  earliest = character(),
-  latest = character(),
-  unique_timestamps = integer(),
-  stringsAsFactors = FALSE
-)
+# gender
+gender_df <- data %>%
+  filter(!is.na(gender) & gender != "") %>%
+  count(gender) %>%
+  mutate(pct = n / sum(n) * 100,
+         label = paste0(gender, "\n", round(pct, 1), "%"))
+p_gender <- ggplot(gender_df, aes(x = "", y = n, fill = gender)) +
+  geom_col(width = 1) +
+  coord_polar("y") +
+  scale_fill_manual(values = c("M" = "#5B8FF9", "F" = "#FF6B9D")) +
+  labs(title = "Gender Distribution", fill = "Gender") +
+  theme_void(base_size = 13) +
+  theme(legend.position = "right")
+save_plot(p_gender, "gender_pie.png", out_cat, w = 6, h = 5)
 
-for (column_name in names(data)) {
-  x <- data[[column_name]]
-  mask <- non_missing_mask(x)
-  non_missing_n <- sum(mask)
-  missing_n <- length(x) - non_missing_n
-  unique_n <- length(unique(x[mask]))
-  family <- detect_family(column_name, x)
+# selfMade
+self_df <- data %>%
+  filter(!is.na(selfMade)) %>%
+  mutate(selfMade = ifelse(selfMade, "Self-Made", "Inherited")) %>%
+  count(selfMade)
+p_self <- ggplot(self_df, aes(x = selfMade, y = n, fill = selfMade)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_manual(values = c("Self-Made" = "#5B8FF9", "Inherited" = "#FF9F40")) +
+  labs(title = "Self-Made vs Inherited Wealth", x = NULL, y = "Count")
+save_plot(p_self, "selfmade_bar.png", out_cat, w = 6, h = 5)
 
-  chart_1_type <- ""
-  chart_1_file <- ""
-  chart_2_type <- ""
-  chart_2_file <- ""
+# category
+save_plot(bar_plot("category", top_n = 18, title = "Billionaires by Category", xlabel = "Category"),
+          "category_bar.png", out_cat, w = 8, h = 6)
 
-  if (family %in% c("numeric", "numeric_like_text")) {
-    values <- coerce_numeric_like(x)
-    summary_row <- numeric_summary_row(column_name, values)
-    summary_row$missing <- missing_n
-    numeric_summary <- rbind(numeric_summary, summary_row)
-    chart_1_type <- "histogram"
-    chart_1_file <- save_histogram(values, column_name)
-    chart_2_type <- "boxplot"
-    chart_2_file <- save_boxplot(values, column_name)
-  } else if (family == "categorical") {
-    values <- as.character(x[mask])
-    counts <- sort(table(values), decreasing = TRUE)
-    categorical_counts <- rbind(
-      categorical_counts,
-      data.frame(
-        column = column_name,
-        level = names(counts),
-        count = as.integer(counts),
-        percent = 100 * as.numeric(counts) / sum(counts),
-        included_in_chart = TRUE,
-        stringsAsFactors = FALSE
-      )
-    )
-    chart_1_type <- "barplot_all_levels"
-    chart_1_file <- save_barplot(counts, column_name, "all_levels")
-  } else if (family == "high_cardinality_categorical") {
-    values <- as.character(x[mask])
-    counts <- sort(table(values), decreasing = TRUE)
-    top_counts <- head(counts, 10)
-    categorical_counts <- rbind(
-      categorical_counts,
-      data.frame(
-        column = column_name,
-        level = names(top_counts),
-        count = as.integer(top_counts),
-        percent = 100 * as.numeric(top_counts) / sum(counts),
-        included_in_chart = TRUE,
-        stringsAsFactors = FALSE
-      )
-    )
-    chart_1_type <- "barplot_top10_levels"
-    chart_1_file <- save_barplot(top_counts, column_name, "top10_levels")
-  } else if (family == "date") {
-    parsed <- parse_date_like(x)
-    parsed_ok <- parsed[!is.na(parsed)]
-    date_summary <- rbind(
-      date_summary,
-      data.frame(
-        column = column_name,
-        n = length(parsed_ok),
-        missing = missing_n,
-        earliest = if (length(parsed_ok)) format(min(parsed_ok), "%Y-%m-%d %H:%M:%S") else "",
-        latest = if (length(parsed_ok)) format(max(parsed_ok), "%Y-%m-%d %H:%M:%S") else "",
-        unique_timestamps = length(unique(parsed_ok)),
-        stringsAsFactors = FALSE
-      )
-    )
-    chart_1_type <- "date_distribution"
-    chart_1_file <- save_date_plot(x, column_name)
-  }
+# country (top 15)
+save_plot(bar_plot("country", top_n = 15, title = "Top 15 Countries of Residence", xlabel = "Country"),
+          "country_bar.png", out_cat, w = 8, h = 6)
 
-  manifest <- rbind(
-    manifest,
-    data.frame(
-      column = column_name,
-      original_class = class(x)[1],
-      analysis_family = family,
-      non_missing = non_missing_n,
-      missing = missing_n,
-      unique_values = unique_n,
-      chart_1_type = chart_1_type,
-      chart_1_file = chart_1_file,
-      chart_2_type = chart_2_type,
-      chart_2_file = chart_2_file,
-      stringsAsFactors = FALSE
-    )
-  )
-}
+# countryOfCitizenship (top 15)
+save_plot(bar_plot("countryOfCitizenship", top_n = 15,
+          title = "Top 15 Countries of Citizenship", xlabel = "Country"),
+          "citizenship_bar.png", out_cat, w = 8, h = 6)
 
-utils::write.csv(manifest, manifest_path, row.names = FALSE, na = "")
-utils::write.csv(numeric_summary, numeric_summary_path, row.names = FALSE, na = "")
-utils::write.csv(categorical_counts, categorical_counts_path, row.names = FALSE, na = "")
-utils::write.csv(date_summary, date_summary_path, row.names = FALSE, na = "")
+# residenceStateRegion (top 15)
+save_plot(bar_plot("residenceStateRegion", top_n = 15,
+          title = "Top 15 Residence State/Regions", xlabel = "Region"),
+          "residence_region_bar.png", out_cat, w = 8, h = 6)
 
-run_summary <- c(
-  paste("Rows:", nrow(data)),
-  paste("Columns:", ncol(data)),
-  paste("Numeric-like columns summarized:", sum(manifest$analysis_family %in% c("numeric", "numeric_like_text"))),
-  paste("Categorical columns summarized:", sum(manifest$analysis_family == "categorical")),
-  paste("High-cardinality categorical columns summarized:", sum(manifest$analysis_family == "high_cardinality_categorical")),
-  paste("Date-like columns summarized:", sum(manifest$analysis_family == "date")),
-  paste("Manifest:", manifest_path),
-  paste("Numeric summary:", numeric_summary_path),
-  paste("Categorical counts:", categorical_counts_path),
-  paste("Date summary:", date_summary_path)
-)
-writeLines(run_summary, run_summary_path)
+# source (top 15)
+save_plot(bar_plot("source", top_n = 15, title = "Top 15 Wealth Sources", xlabel = "Source"),
+          "source_bar.png", out_cat, w = 9, h = 6)
 
-cat("Descriptive analysis written to:", out_dir, "\n")
-cat("Columns processed:", ncol(data), "\n")
+# organization (top 15)
+save_plot(bar_plot("organization", top_n = 15,
+          title = "Top 15 Organizations", xlabel = "Organization"),
+          "organization_bar.png", out_cat, w = 9, h = 6)
+
+# city (top 15)
+save_plot(bar_plot("city", top_n = 15, title = "Top 15 Cities", xlabel = "City"),
+          "city_bar.png", out_cat, w = 8, h = 6)
+
+# state (top 15)
+save_plot(bar_plot("state", top_n = 15, title = "Top 15 States", xlabel = "State"),
+          "state_bar.png", out_cat, w = 8, h = 6)
+
+# title (top 15)
+save_plot(bar_plot("title", top_n = 15, title = "Top 15 Titles", xlabel = "Title"),
+          "title_bar.png", out_cat, w = 9, h = 6)
+
+cat("Descriptive analysis complete.\n")
+cat("Numeric plots saved to:", out_num, "\n")
+cat("Categorical plots saved to:", out_cat, "\n")
